@@ -4,5 +4,5 @@
 
 class ExternalDevice {
     string externalId; 
-    strin
+    string
 };
