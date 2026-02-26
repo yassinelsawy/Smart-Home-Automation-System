@@ -8,5 +8,10 @@
 
 class Thermostat {
 public:
+    Thermostat(){}
+    Thermostat(string type){}
+    virtual ~Thermostat() = default;
+    void setTemperature(double temp) const;
+    double getTemperature() const;
 
 };

@@ -10,7 +10,7 @@
 
 
 class AutomationEngine : public IObserver {
-    vector<SmartDevice*> monitoredDevices;
+    // vector<SmartDevice*> monitoredDevices;
     vector<ICommand*> historyCommands;
 public:
     void update(SmartDevice* device) override;

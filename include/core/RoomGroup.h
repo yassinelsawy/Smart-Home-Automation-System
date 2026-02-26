@@ -18,4 +18,5 @@ public:
     string getName() override;
     string getId() override;
     string getRoomType(){};
+    string getStatus() override;
 };

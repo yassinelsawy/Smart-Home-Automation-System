@@ -11,11 +11,10 @@ using namespace std;
 
 class SmartDeviceFactory {
 public:
-    virtual Light* createLight(string type) = 0;
-    virtual Thermostat* createThermostat(string type) = 0;
-    virtual Camera* createCamera(string type) = 0;
-    virtual MotionSensor* createMotionSensor() = 0;
-    virtual DoorLock* createDoorLock() = 0;
-
+    virtual Light* createLight() const = 0;
+    virtual Thermostat* createThermostat() const = 0;
+    virtual Camera* createCamera() const = 0;
+    virtual MotionSensor* createMotionSensor() const = 0;
+    virtual DoorLock* createDoorLock() const = 0;
 };
 

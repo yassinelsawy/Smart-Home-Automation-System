@@ -1,7 +1,8 @@
 
 #include <iostream>
 #include <string>
-#include "SmartDevice.h"
+// #include "SmartDevice.h"
+
 using namespace std;
 
 class IDeviceState {

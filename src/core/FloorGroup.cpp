@@ -1,24 +1,49 @@
-#include "../../include/core/FloorGroup.h"
+#include "FloorGroup.h"
+#include "DeviceGroup.h"
+
+#include <vector>
 #include <iostream>
+#include <string>
+#include <algorithm>
 
-namespace SmartHome {
-namespace Core {
+using namespace std;
 
-FloorGroup::FloorGroup(const std::string& name, int floorNumber)
-    : DeviceGroup(name)
-    , m_floorNumber(floorNumber)
-{}
-
-void FloorGroup::getStatus() const {
-    std::cout << "Floor [" << m_name << "]"
-              << " | Floor #" << m_floorNumber
-              << " | Rooms: "  << childCount() << "\n";
-    for (std::size_t i = 0; i < childCount(); ++i) {
-        getChild(i)->getStatus();
-    }
+FloorGroup::FloorGroup(int fn) {
+    floorNumber = fn;
 }
 
-int FloorGroup::getFloorNumber() const { return m_floorNumber; }
+void FloorGroup::Add(SmartComponent* component) {
+    DeviceGroup::Add(component);
+}
 
-} // namespace Core
-} // namespace SmartHome
+void FloorGroup::Remove(SmartComponent* component) {
+    DeviceGroup::Remove(component);
+}
+
+vector<SmartComponent*> FloorGroup::getChildren() {
+    return DeviceGroup::getChildren();
+}
+
+void FloorGroup::turnOn() {
+    DeviceGroup::turnOn();
+}
+
+void FloorGroup::turnOff() {
+    DeviceGroup::turnOff();
+}
+
+string FloorGroup::getName() {
+    return "Floor " + to_string(floorNumber);
+}
+
+string FloorGroup::getId() {
+    return "FLOOR-" + to_string(floorNumber);
+}
+
+string FloorGroup::getStatus() {
+    string status = "Floor " + to_string(floorNumber) + ":\n";
+    for (auto* child : getChildren()) {
+        status += "  - " + child->getStatus() + "\n";
+    }
+    return status;
+}

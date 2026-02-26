@@ -16,4 +16,5 @@ public:
     void turnOff() override;
     string getName() override;
     string getId() override;
+    string getStatus() override;
 };

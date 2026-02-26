@@ -1,29 +1,14 @@
-#include "../../include/command/TurnOffCommand.h"
-#include "../../include/utils/Logger.h"
+#include "ICommand.h"
+#include "SmartDevice.h"
 
-namespace SmartHome {
-namespace Command {
+using namespace std;
 
-TurnOffCommand::TurnOffCommand(
-    std::shared_ptr<Core::SmartComponent> receiver)
-    : m_receiver(std::move(receiver))
-{}
+TurnOffCommand::TurnOffCommand(SmartDevice* device) : m_device(device) {}
 
 void TurnOffCommand::execute() {
-    m_receiver->turnOff();
-    Utils::Logger::instance().info(
-        "Executed: " + getDescription(), "TurnOffCommand");
+    m_device->turnOff();
 }
 
 void TurnOffCommand::undo() {
-    m_receiver->turnOn();
-    Utils::Logger::instance().info(
-        "Undone: "    + getDescription(), "TurnOffCommand");
+    m_device->turnOn();
 }
-
-std::string TurnOffCommand::getDescription() const {
-    return "TurnOff(" + m_receiver->getName() + ")";
-}
-
-} // namespace Command
-} // namespace SmartHome

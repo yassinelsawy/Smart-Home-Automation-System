@@ -12,7 +12,7 @@ public:
     virtual void turnOff() = 0;
     virtual string getName() = 0;
     virtual string getId() = 0;
-    virtual string getStatus() = 0;
+    string getStatus() const ;
     virtual ~SmartComponent() = default;
 };
 

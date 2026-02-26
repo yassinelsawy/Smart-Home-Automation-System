@@ -1,44 +1,59 @@
-#include "../../include/core/SmartDevice.h"
-#include "../../include/utils/Logger.h"
-#include <iostream>
+#include "SmartDevice.h"
+#include "SmartComponent.h"
+#include "ISubject.h"
+#include "IDeviceState.h"
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
 
-namespace SmartHome {
-namespace Core {
-
-SmartDevice::SmartDevice(const std::string& name,
-                         const std::string& deviceId,
-                         const std::string& location)
-    : SmartComponent(name)
-    , m_deviceId(deviceId)
-    , m_location(location)
-{}
+SmartDevice::SmartDevice(string i, string n, string b) : id(i), name(n), brand(b){
+    DeviceStatus = currentState->getStatus();
+}
 
 void SmartDevice::turnOn() {
-    m_enabled = true;
-    Utils::Logger::instance().info(
-        "[" + m_name + "] turned ON", "SmartDevice");
+    if (currentState) {
+        currentState->turnOn();
+        DeviceStatus = currentState->getStatus();
+        notify();
+    }
 }
 
 void SmartDevice::turnOff() {
-    m_enabled = false;
-    Utils::Logger::instance().info(
-        "[" + m_name + "] turned OFF", "SmartDevice");
+    if (currentState) {
+        currentState->turnOff();
+        DeviceStatus = currentState->getStatus();
+        notify();
+    }
 }
 
-void SmartDevice::getStatus() const {
-    std::cout << "Device: " << m_name
-              << " | ID: "       << m_deviceId
-              << " | Location: " << m_location
-              << " | Status: "   << (m_enabled ? "ON" : "OFF")
-              << "\n";
+string SmartDevice::getName() {
+    return name;
 }
 
-const std::string& SmartDevice::getDeviceId() const { return m_deviceId; }
-const std::string& SmartDevice::getLocation()  const { return m_location;  }
-
-void SmartDevice::setLocation(const std::string& location) {
-    m_location = location;
+string SmartDevice::getId() {
+    return id;
 }
 
-} // namespace Core
-} // namespace SmartHome
+string SmartDevice::getStatus() {
+    return DeviceStatus;
+}
+
+void SmartDevice::setLocation(string l) {
+    location = l;
+}
+
+void SmartDevice::attach(IObserver* o) {
+    observers.push_back(o);
+}
+
+void SmartDevice::detach(IObserver* o) {
+    observers.erase(remove(observers.begin(), observers.end(), o), observers.end());
+}
+
+void SmartDevice::notify() {
+    for (auto* observer : observers) {
+        observer->update(this);
+    }
+}
+

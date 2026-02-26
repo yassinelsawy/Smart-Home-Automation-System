@@ -1,32 +1,17 @@
-#include "../../include/core/SmartComponent.h"
-#include <stdexcept>
+#include "SmartComponent.h"
+#include <iostream>
+#include <string>
+using namespace std;
 
-namespace SmartHome {
-namespace Core {
+void SmartComponent::turnOn() {}
 
-SmartComponent::SmartComponent(const std::string& name)
-    : m_name(name) {}
+void SmartComponent::turnOff() {}
 
-const std::string& SmartComponent::getName() const { return m_name; }
+string SmartComponent::getName() {}
 
-bool SmartComponent::isEnabled() const { return m_enabled; }
-void SmartComponent::setEnabled(bool enabled) { m_enabled = enabled; }
+string SmartComponent::getId() {}
 
-bool SmartComponent::isComposite() const { return false; }
+string SmartComponent::getStatus() {}
 
-// Default no-op composite management (leaves override via SmartDevice,
-// composites override via DeviceGroup)
-void SmartComponent::add(std::shared_ptr<SmartComponent> /*component*/) {
-    throw std::logic_error("add() not supported on a leaf SmartComponent");
-}
+SmartComponent::~SmartComponent() = default;
 
-void SmartComponent::remove(std::shared_ptr<SmartComponent> /*component*/) {
-    throw std::logic_error("remove() not supported on a leaf SmartComponent");
-}
-
-SmartComponent* SmartComponent::getChild(std::size_t /*index*/) {
-    return nullptr;
-}
-
-} // namespace Core
-} // namespace SmartHome

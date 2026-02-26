@@ -8,6 +8,7 @@
 class DeviceGroup : public SmartComponent {
     string GroupID;
     string GroupName;
+    vector<SmartComponent*> children;
 public: 
     DeviceGroup();
     DeviceGroup(string gID, string gName); 
@@ -16,6 +17,7 @@ public:
     virtual vector<SmartComponent*> getChildren();
     void turnOn() override;
     void turnOff() override;
+    string getStatus() override;
     string getName() override;
     string getId() override;
 };

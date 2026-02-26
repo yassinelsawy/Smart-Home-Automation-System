@@ -1,64 +1,45 @@
-#include "../../include/core/SmartHomeHub.h"
-#include "../../include/utils/Logger.h"
+#include "DeviceGroup.h"
+#include "SmartComponent.h"
+#include "SmartDeviceFactory.h"
+#include "AutomationEngine.h"
+#include "IMode.h"
+#include "ICommand.h"
+#include "SmartHomeHub.h"
 #include <iostream>
 #include <string>
+#include <vector>
+#include <map>
 
-namespace SmartHome {
-namespace Core {
+using namespace std;
 
-SmartHomeHub::SmartHomeHub(const std::string& hubName)
-    : DeviceGroup(hubName)
-{}
+SmartHomeHub::SmartHomeHub(const string& hubName) {
+    deviceFactory = new SmartDeviceFactory();
+    automationEngine = new AutomationEngine();
+    currentMode = nullptr;
+}
+
+SmartDevice* SmartHomeHub::createDevice(const string& type, const string& id, const string& name, const string& brand) {
+    if (type == "Light") {
+        return deviceFactory->createLight(type);
+    } else if (type == "Thermostat") {
+        return deviceFactory->createThermostat(type);
+    } else if (type == "Camera") {
+        return deviceFactory->createCamera(type);
+    } else if (type == "MotionSensor") {
+        return deviceFactory->createMotionSensor();
+    } else if (type == "DoorLock") {
+        return deviceFactory->createDoorLock();
+    }
+    return nullptr;
+}
 
 void SmartHomeHub::getStatus() const {
-    std::cout << "======================================\n";
-    std::cout << "  Smart Home Hub: " << m_name << "\n";
-    std::cout << "  Total Floors/Groups: " << childCount() << "\n";
-    std::cout << "======================================\n";
-    for (std::size_t i = 0; i < childCount(); ++i) {
-        getChild(i)->getStatus();
-    }
-    std::cout << "======================================\n";
-}
-
-// ── Strategy Pattern ─────────────────────────────────────────────────────
-
-void SmartHomeHub::setAutomationStrategy(
-    std::unique_ptr<Strategy::IAutomationStrategy> strategy)
-{
-    m_strategy = std::move(strategy);
-    if (m_strategy) {
-        Utils::Logger::instance().info(
-            "Strategy set: " + m_strategy->getStrategyName(), "SmartHomeHub");
-    }
-}
-
-void SmartHomeHub::executeAutomation() {
-    if (m_strategy) {
-        Utils::Logger::instance().info(
-            "Executing strategy: " + m_strategy->getStrategyName(),
-            "SmartHomeHub");
-        m_strategy->execute(*this);
-    } else {
-        Utils::Logger::instance().warning(
-            "No automation strategy set.", "SmartHomeHub");
-    }
-}
-
-// ── Utility ──────────────────────────────────────────────────────────────
-
-void SmartHomeHub::printHierarchy(int depth) const {
-    std::string indent(static_cast<std::size_t>(depth * 2), ' ');
-    std::cout << indent << "[HUB] " << m_name << "\n";
-    for (std::size_t i = 0; i < childCount(); ++i) {
-        auto* child = getChild(i);
-        if (child->isComposite()) {
-            std::cout << indent << "  [GROUP] " << child->getName() << "\n";
-        } else {
-            std::cout << indent << "  [DEVICE] " << child->getName() << "\n";
+    cout << "Smart Home Hub Status:\n";
+    for (const auto& pair : devicesByZone) {
+        cout << "Zone: " << pair.first << "\n";
+        for (const auto* device : pair.second) {
+            cout << "  - " << device->getStatus() << "\n";
         }
     }
 }
 
-} // namespace Core
-} // namespace SmartHome

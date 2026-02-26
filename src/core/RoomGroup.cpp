@@ -1,30 +1,49 @@
-#include "../../include/core/RoomGroup.h"
+#include "RoomGroup.h"
+#include "DeviceGroup.h"
+#include "SmartComponent.h"
+
+#include <vector>
 #include <iostream>
+#include <string>
 
-namespace SmartHome {
-namespace Core {
+using namespace std;
 
-RoomGroup::RoomGroup(const std::string& roomName,
-                     const std::string& roomType,
-                     int                floorNumber)
-    : DeviceGroup(roomName)
-    , m_roomType(roomType)
-    , m_floorNumber(floorNumber)
-{}
-
-void RoomGroup::getStatus() const {
-    std::cout << "Room [" << m_name << "]"
-              << " | Type: "  << m_roomType
-              << " | Floor: " << m_floorNumber
-              << " | Devices: " << childCount() << "\n";
-    for (std::size_t i = 0; i < childCount(); ++i) {
-        std::cout << "  ";
-        getChild(i)->getStatus();
-    }
+RoomGroup::RoomGroup(string rt) {
+    roomType = rt;
 }
 
-const std::string& RoomGroup::getRoomType()    const { return m_roomType;    }
-int                RoomGroup::getFloorNumber() const { return m_floorNumber; }
+void RoomGroup::Add(SmartComponent* component) {
+    DeviceGroup::Add(component);
+}
 
-} // namespace Core
-} // namespace SmartHome
+void RoomGroup::Remove(SmartComponent* component) {
+    DeviceGroup::Remove(component);
+}
+
+vector<SmartComponent*> RoomGroup::getChildren() {
+    return DeviceGroup::getChildren();
+}
+
+void RoomGroup::turnOn() {
+    DeviceGroup::turnOn();
+}
+
+void RoomGroup::turnOff() {
+    DeviceGroup::turnOff();
+}
+
+string RoomGroup::getName() {
+    return "Room: " + roomType;
+}
+
+string RoomGroup::getId() {
+    return "ROOM-" + roomType;
+}
+
+string RoomGroup::getStatus() {
+    string status = "Room: " + roomType + ":\n";
+    for (auto* child : getChildren()) {
+        status += "  - " + child->getStatus() + "\n";
+    }
+    return status;
+}
