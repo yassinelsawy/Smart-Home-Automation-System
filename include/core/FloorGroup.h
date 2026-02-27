@@ -8,13 +8,14 @@ class FloorGroup : public DeviceGroup {
     int floorNumber;
 public:
     FloorGroup();
-    FloorGroup(int fn);
-    void Add(SmartComponent* component) override;
-    void Remove(SmartComponent* component) override;
-    vector<SmartComponent*> getChildren() override;
+    FloorGroup(string gID, string gName, int fn);
+    void add(SmartComponent* component) override;
+    void remove(SmartComponent* component) override;
+    vector<SmartComponent*> getChildren() const override;
     void turnOn() override;
     void turnOff() override;
-    string getName() override;
-    string getId() override;
-    string getStatus() override;
+    string getName() const override;
+    string getId() const override;
+    string getStatus() const override;
+    int getFloorNumber() const;
 };

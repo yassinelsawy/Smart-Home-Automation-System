@@ -2,15 +2,13 @@
 
 #include "ICommand.h"
 #include "../core/SmartDevice.h"
-#include <memory>
 #include <string>
 
-
 class TurnOffCommand : public ICommand {
-    // SmartDevice* device;
+    SmartDevice* m_device;
 public:
     TurnOffCommand(SmartDevice* device);
     void execute() override;
-    void undo() override;
+    void undo()    override;
 };
 

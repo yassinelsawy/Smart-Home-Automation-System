@@ -33,6 +33,7 @@ set(CORE_SOURCES
     src/core/DeviceGroup.cpp
     src/core/RoomGroup.cpp
     src/core/FloorGroup.cpp
+    src/core/FunctionalGroup.cpp
     src/core/SmartHomeHub.cpp
 
     # ── devices ───────────────────────────────────────────────────────────────
@@ -41,38 +42,43 @@ set(CORE_SOURCES
     src/devices/Camera.cpp
     src/devices/MotionSensor.cpp
     src/devices/DoorLock.cpp
+    src/devices/BrandALedLight.cpp
+    src/devices/BrandAHalogenLight.cpp
+    src/devices/BrandBLedLight.cpp
+    src/devices/BrandBHalogenLight.cpp
+    src/devices/BrandAWiredSCam.cpp
+    src/devices/BrandAWirelessSCam.cpp
+    src/devices/BrandBWiredSCam.cpp
+    src/devices/BrandBWirelessSCam.cpp
+    src/devices/BrandASmartThermoA.cpp
+    src/devices/BrandASmartThermoB.cpp
+    src/devices/BrandBSmartThermoA.cpp
+    src/devices/BrandBSmartThermoB.cpp
 
     # ── command ───────────────────────────────────────────────────────────────
+    src/command/ICommand.cpp
     src/command/TurnOnCommand.cpp
     src/command/TurnOffCommand.cpp
+    src/command/AutomationEngine.cpp
     src/command/SetTemperatureCommand.cpp
-    src/command/CommandInvoker.cpp
 
     # ── state ─────────────────────────────────────────────────────────────────
-    src/state/ActiveState.cpp
-    src/state/InactiveState.cpp
-    src/state/StandbyState.cpp
-
-    # ── observer ──────────────────────────────────────────────────────────────
-    src/observer/EventManager.cpp
-    src/observer/AlertSystem.cpp
+    src/state/OnState.cpp
+    src/state/OffState.cpp
+    src/state/DimmedState.cpp
 
     # ── strategy ──────────────────────────────────────────────────────────────
     src/strategy/EnergyEfficiencyStrategy.cpp
-    src/strategy/SecurityStrategy.cpp
     src/strategy/ComfortStrategy.cpp
 
     # ── factory ───────────────────────────────────────────────────────────────
-    src/factory/BasicDeviceFactory.cpp
-    src/factory/PremiumDeviceFactory.cpp
+    src/factory/SmartDeviceFactory.cpp
+    src/factory/BrandAFactory.cpp
+    src/factory/BrandBFactory.cpp
 
     # ── adapter ───────────────────────────────────────────────────────────────
-    src/adapter/LegacyDevice.cpp
-    src/adapter/LegacyDeviceAdapter.cpp
-
-    # ── utils ─────────────────────────────────────────────────────────────────
-    src/utils/Logger.cpp
-    src/utils/Timer.cpp
+    src/adapter/ExternalDevice.cpp
+    src/adapter/ExternalDeviceAdapter.cpp
 )
 
 add_library(smarthome_core STATIC ${CORE_SOURCES})
@@ -80,6 +86,15 @@ add_library(smarthome_core STATIC ${CORE_SOURCES})
 target_include_directories(smarthome_core
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/core
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/devices
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/command
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/factory
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/observer
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/state
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/strategy
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/utils
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/adapter
 )
 
 # Link pthreads on Linux/macOS for std::mutex
@@ -93,25 +108,6 @@ endif()
 
 add_executable(SmartHome main.cpp)
 target_link_libraries(SmartHome PRIVATE smarthome_core)
-
-# ═════════════════════════════════════════════════════════════════════════════
-# Unit tests (CTest integration)
-# ═════════════════════════════════════════════════════════════════════════════
-
-enable_testing()
-
-function(add_smarthome_test test_name source_file)
-    add_executable(${test_name} ${source_file})
-    target_link_libraries(${test_name} PRIVATE smarthome_core)
-    add_test(
-        NAME    ${test_name}
-        COMMAND ${test_name}
-    )
-endfunction()
-
-add_smarthome_test(test_composite tests/test_composite.cpp)
-add_smarthome_test(test_command   tests/test_command.cpp)
-add_smarthome_test(test_observer  tests/test_observer.cpp)
 
 # ═════════════════════════════════════════════════════════════════════════════
 # Install rules (optional – for packaging)

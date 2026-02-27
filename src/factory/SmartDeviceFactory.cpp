@@ -1,27 +1,12 @@
-#include "../devices/Light.h"
-#include "../devices/Thermostat.h"
-#include "../devices/Camera.h"
-#include "../devices/MotionSensor.h"
-#include "../devices/DoorLock.h"
+#include "../../include/devices/Light.h"
+#include "../../include/devices/Thermostat.h"
+#include "../../include/devices/Camera.h"
+#include "../../include/devices/MotionSensor.h"
+#include "../../include/devices/DoorLock.h"
 
-#include "SmartDeviceFactory.h"
+#include "../../include/factory/SmartDeviceFactory.h"
 
-Light* SmartDeviceFactory::createLight() const {
-    
-}
+using namespace std;
 
-Thermostat* SmartDeviceFactory::createThermostat(string type) const {
-    return new Thermostat(type);
-}
+// A7la msa 3lek y Alm :D
 
-Camera* SmartDeviceFactory::createCamera(string type) const {
-    return new Camera(type);
-}
-
-MotionSensor* SmartDeviceFactory::createMotionSensor() const {
-    return new MotionSensor();
-}
-
-DoorLock* SmartDeviceFactory::createDoorLock() const {
-    return new DoorLock();
-}

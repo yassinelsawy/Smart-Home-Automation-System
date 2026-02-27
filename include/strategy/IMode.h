@@ -1,7 +1,9 @@
 #pragma once
 #include <string>
-#include<iostream>
-#include "core/SmartHomeHub.h"
+#include <iostream>
+using namespace std;
+
+class SmartHomeHub;  // forward declaration
 
 class IMode{
 public:

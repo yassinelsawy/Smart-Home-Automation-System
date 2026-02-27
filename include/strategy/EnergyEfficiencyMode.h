@@ -2,7 +2,7 @@
 
 #include "IMode.h"
 
-class EnergyEfficiencyMode : IMode {
+class EnergyEfficiencyMode : public IMode {
     int maxAllowedDevices;
     int autoShutdownDelay;
 public:

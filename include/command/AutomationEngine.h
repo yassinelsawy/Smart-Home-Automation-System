@@ -1,20 +1,20 @@
 #pragma once
 
 #include "ICommand.h"
-#include "SmartDevice.h"
-#include "IObserver.h"
-#include <memory>
-#include <stack>
+#include "../core/SmartDevice.h"
+#include "../observer/Observer.h"
 #include <string>
 #include <vector>
 
-
-class AutomationEngine : public IObserver {
-    // vector<SmartDevice*> monitoredDevices;
-    vector<ICommand*> historyCommands;
+class AutomationEngine : public Observer {
+    vector<SmartDevice*> monitoredDevices;   
+    vector<ICommand*>    historyCommands;    
 public:
-    void update(SmartDevice* device) override;
-    void executeCommand(ICommand* command);
-    void addCommand(ICommand* command);
 
+    void update(SmartDevice* device) override;
+
+    void addCommand(ICommand* command);
+    void executeCommand(ICommand* command);
+    void execute(ICommand* command);    // wrapper for executeCommand
+    void undoLast();                     // undo the last executed command
 };

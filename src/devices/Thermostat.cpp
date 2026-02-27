@@ -1,61 +1,32 @@
 #include "../../include/devices/Thermostat.h"
-#include "../../include/state/InactiveState.h"
-#include "../../include/utils/Logger.h"
 #include <iostream>
+using namespace std;
 
-namespace SmartHome {
-namespace Devices {
+Thermostat::Thermostat() 
+: m_targetTemp(22.0), m_currentTemp(20.0), m_mode(ThermoMode::AUTO) {}
 
-Thermostat::Thermostat(const std::string& name,
-                       const std::string& deviceId,
-                       const std::string& location)
-    : SmartDevice(name, deviceId, location)
-    , m_state(std::make_unique<State::InactiveState>())
-{}
 
-// ── SmartDevice overrides ─────────────────────────────────────────────────
-
-void Thermostat::turnOn() {
-    SmartDevice::turnOn();
-    m_state->handleTurnOn();
+void Thermostat::setTargetTemperature(double temp) {
+    m_targetTemp = temp;
+    cout << "[Thermostat] Target temperature set to " << temp << " C\n";
 }
 
-void Thermostat::turnOff() {
-    SmartDevice::turnOff();
-    m_state->handleTurnOff();
+double Thermostat::getTargetTemperature() const {
+    return m_targetTemp;
 }
 
-void Thermostat::getStatus() const {
-    std::cout << "  [Thermostat] " << m_name
-              << " | State: "   << m_state->getStateName()
-              << " | Target: "  << m_targetTemp  << " °C"
-              << " | Current: " << m_currentTemp << " °C"
-              << " | Location: "<< m_location << "\n";
+double Thermostat::getCurrentTemperature() const {
+    return m_currentTemp;
 }
 
-// ── Thermostat-specific ───────────────────────────────────────────────────
-
-void Thermostat::setTargetTemperature(double celsius) {
-    m_targetTemp = celsius;
-    Utils::Logger::instance().info(
-        m_name + " target temperature set to " + std::to_string(celsius) + " °C",
-        "Thermostat");
+void Thermostat::setCurrentTemperature(double temp) {
+    m_currentTemp = temp;
 }
 
-double Thermostat::getTargetTemperature()  const { return m_targetTemp;  }
-double Thermostat::getCurrentTemperature() const { return m_currentTemp; }
-
-void Thermostat::setCurrentTemperature(double celsius) {
-    m_currentTemp = celsius;
+void Thermostat::setMode(ThermoMode mode) {
+    m_mode = mode;
 }
 
-// ── State Pattern ─────────────────────────────────────────────────────────
-
-void Thermostat::changeState(std::unique_ptr<State::IDeviceState> newState) {
-    if (m_state) m_state->onExit();
-    m_state = std::move(newState);
-    if (m_state) m_state->onEnter();
+ThermoMode Thermostat::getMode() const {
+    return m_mode;
 }
-
-} // namespace Devices
-} // namespace SmartHome

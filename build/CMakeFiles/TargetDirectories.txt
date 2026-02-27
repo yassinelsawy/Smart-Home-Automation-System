@@ -1,0 +1,8 @@
+C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/build/CMakeFiles/smarthome_core.dir
+C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/build/CMakeFiles/SmartHome.dir
+C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/build/CMakeFiles/edit_cache.dir
+C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/build/CMakeFiles/rebuild_cache.dir
+C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/build/CMakeFiles/list_install_components.dir
+C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/build/CMakeFiles/install.dir
+C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/build/CMakeFiles/install/local.dir
+C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/build/CMakeFiles/install/strip.dir

@@ -1,6 +1,6 @@
-#include "RoomGroup.h"
-#include "DeviceGroup.h"
-#include "SmartComponent.h"
+#include "../../include/core/RoomGroup.h"
+#include "../../include/core/DeviceGroup.h"
+#include "../../include/core/SmartComponent.h"
 
 #include <vector>
 #include <iostream>
@@ -8,42 +8,43 @@
 
 using namespace std;
 
-RoomGroup::RoomGroup(string rt) {
-    roomType = rt;
+RoomGroup::RoomGroup() {}
+
+RoomGroup::RoomGroup(string gID, string gName, string rt)
+    : DeviceGroup(gID, gName, "Room"), roomType(rt) {}
+
+void RoomGroup::add(SmartComponent* component) {
+    DeviceGroup::add(component);
 }
 
-void RoomGroup::Add(SmartComponent* component) {
-    DeviceGroup::Add(component);
+void RoomGroup::remove(SmartComponent* component) {
+    DeviceGroup::remove(component);
 }
 
-void RoomGroup::Remove(SmartComponent* component) {
-    DeviceGroup::Remove(component);
-}
-
-vector<SmartComponent*> RoomGroup::getChildren() {
+vector<SmartComponent*> RoomGroup::getChildren() const {
     return DeviceGroup::getChildren();
 }
 
-void RoomGroup::turnOn() {
-    DeviceGroup::turnOn();
+void RoomGroup::turnOn()  { DeviceGroup::turnOn();  }
+void RoomGroup::turnOff() { DeviceGroup::turnOff(); }
+
+string RoomGroup::getName() const {
+    return DeviceGroup::getName().empty()
+           ? "Room: " + roomType
+           : DeviceGroup::getName();
 }
 
-void RoomGroup::turnOff() {
-    DeviceGroup::turnOff();
+string RoomGroup::getId() const {
+    return DeviceGroup::getId().empty()
+           ? "ROOM-" + roomType
+           : DeviceGroup::getId();
 }
 
-string RoomGroup::getName() {
-    return "Room: " + roomType;
-}
+string RoomGroup::getRoomType() const { return roomType; }
 
-string RoomGroup::getId() {
-    return "ROOM-" + roomType;
-}
-
-string RoomGroup::getStatus() {
+string RoomGroup::getStatus() const {
     string status = "Room: " + roomType + ":\n";
-    for (auto* child : getChildren()) {
+    for (auto* child : DeviceGroup::getChildren())
         status += "  - " + child->getStatus() + "\n";
-    }
     return status;
 }

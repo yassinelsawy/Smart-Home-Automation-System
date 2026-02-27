@@ -7,6 +7,7 @@
 
 
 class TurnOnCommand : public ICommand {
+    SmartDevice* m_device;
 public:
     TurnOnCommand(SmartDevice* device);
     void execute() override;

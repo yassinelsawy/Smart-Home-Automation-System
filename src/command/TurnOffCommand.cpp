@@ -1,6 +1,5 @@
-#include "ICommand.h"
-#include "SmartDevice.h"
-
+#include "../../include/command/TurnOffCommand.h"
+#include "../../include/core/SmartDevice.h"
 using namespace std;
 
 TurnOffCommand::TurnOffCommand(SmartDevice* device) : m_device(device) {}

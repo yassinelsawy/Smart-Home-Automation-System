@@ -1,12 +1,17 @@
 #pragma once
 
-#include "../core/SmartDevice.h"
-#include "../observer/ISubject.h"
-#include "../state/IDeviceState.h"
-#include <memory>
 #include <string>
+using namespace std;
 
+class DoorLock {
+    bool   m_locked = false;
+    string m_pin;
+public:
+    DoorLock() = default;
+    virtual ~DoorLock() = default;
 
-class DoorLock  {
-
+    void lock();
+    void unlock();
+    bool isLocked() const;
+    void setPin(const string& pin);
 };

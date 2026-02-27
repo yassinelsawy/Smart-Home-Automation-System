@@ -1,6 +1,5 @@
-#include "ICommand.h"
-#include "SmartDevice.h"
-#include "TurnOnCommand.h"
+#include "../../include/command/TurnOnCommand.h"
+#include "../../include/core/SmartDevice.h"
 using namespace std;
 
 TurnOnCommand::TurnOnCommand(SmartDevice* device) : m_device(device) {}

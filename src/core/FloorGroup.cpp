@@ -1,5 +1,5 @@
-#include "FloorGroup.h"
-#include "DeviceGroup.h"
+#include "../../include/core/FloorGroup.h"
+#include "../../include/core/DeviceGroup.h"
 
 #include <vector>
 #include <iostream>
@@ -8,42 +8,43 @@
 
 using namespace std;
 
-FloorGroup::FloorGroup(int fn) {
-    floorNumber = fn;
+FloorGroup::FloorGroup() : floorNumber(0) {}
+
+FloorGroup::FloorGroup(string gID, string gName, int fn)
+    : DeviceGroup(gID, gName, "Floor"), floorNumber(fn) {}
+
+void FloorGroup::add(SmartComponent* component) {
+    DeviceGroup::add(component);
 }
 
-void FloorGroup::Add(SmartComponent* component) {
-    DeviceGroup::Add(component);
+void FloorGroup::remove(SmartComponent* component) {
+    DeviceGroup::remove(component);
 }
 
-void FloorGroup::Remove(SmartComponent* component) {
-    DeviceGroup::Remove(component);
-}
-
-vector<SmartComponent*> FloorGroup::getChildren() {
+vector<SmartComponent*> FloorGroup::getChildren() const {
     return DeviceGroup::getChildren();
 }
 
-void FloorGroup::turnOn() {
-    DeviceGroup::turnOn();
+void FloorGroup::turnOn()  { DeviceGroup::turnOn();  }
+void FloorGroup::turnOff() { DeviceGroup::turnOff(); }
+
+string FloorGroup::getName() const {
+    return DeviceGroup::getName().empty()
+           ? "Floor " + to_string(floorNumber)
+           : DeviceGroup::getName();
 }
 
-void FloorGroup::turnOff() {
-    DeviceGroup::turnOff();
+string FloorGroup::getId() const {
+    return DeviceGroup::getId().empty()
+           ? "FLOOR-" + to_string(floorNumber)
+           : DeviceGroup::getId();
 }
 
-string FloorGroup::getName() {
-    return "Floor " + to_string(floorNumber);
-}
+int FloorGroup::getFloorNumber() const { return floorNumber; }
 
-string FloorGroup::getId() {
-    return "FLOOR-" + to_string(floorNumber);
-}
-
-string FloorGroup::getStatus() {
+string FloorGroup::getStatus() const {
     string status = "Floor " + to_string(floorNumber) + ":\n";
-    for (auto* child : getChildren()) {
+    for (auto* child : getChildren())
         status += "  - " + child->getStatus() + "\n";
-    }
     return status;
 }

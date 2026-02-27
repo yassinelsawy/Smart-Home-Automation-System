@@ -1,15 +1,2 @@
-#include "ICommand.h"   
-
-using namespace std;
-
-void ICommand::execute() {
-    // Default implementation (can be overridden by derived classes)
-}
-
-void ICommand::undo() {
-    // Default implementation (can be overridden by derived classes)
-}
-
-ICommand::~ICommand() {
-    // Virtual destructor to ensure proper cleanup of derived classes
-}
+#include "../../include/command/ICommand.h"
+// ICommand is a pure abstract interface; implementations are in concrete command classes.

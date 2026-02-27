@@ -1,4 +1,4 @@
-
+#pragma once
 #include "DeviceGroup.h"
 #include "SmartComponent.h"
 #include <iostream>
@@ -9,14 +9,14 @@ class RoomGroup : public DeviceGroup {
     string roomType;
 public:
     RoomGroup();
-    RoomGroup(string rt);
-    void Add(SmartComponent* component); 
-    void Remove(SmartComponent* component) override;
-    vector<SmartComponent*> getChildren() override;
+    RoomGroup(string gID, string gName, string rt);
+    void add(SmartComponent* component) override;
+    void remove(SmartComponent* component) override;
+    vector<SmartComponent*> getChildren() const override;
     void turnOn() override;
     void turnOff() override;
-    string getName() override;
-    string getId() override;
-    string getRoomType(){};
-    string getStatus() override;
+    string getName() const override;
+    string getId() const override;
+    string getRoomType() const;
+    string getStatus() const override;
 };

@@ -1,27 +1,30 @@
 
-#include "../../include/adapter/ExternalDeviceAdapter.h"
+#include "../../include/adapter/ExternalDevice.h"
 #include <iostream>
-#include <string>
-
 using namespace std;
 
-ExternalDevice::ExternalDevice(string id, string vendor, string protocol) : externalId(id), vendorName(vendor), protocolType(protocol), isConnected(false) {}
 void ExternalDevice::connect() {
     isConnected = true;
-    cout << "ExternalDevice " << externalId << " connected." << endl;
+    rawState    = "connected";
+    cout << "[ExternalDevice:" << vendorName << "] Connected via " << protocolType << ".\n";
 }
+
 void ExternalDevice::disconnect() {
     isConnected = false;
-    cout << "ExternalDevice " << externalId << " disconnected." << endl;
+    rawState    = "disconnected";
+    cout << "[ExternalDevice:" << vendorName << "] Disconnected.\n";
 }
-void ExternalDevice::sendCommand(string command) {
+
+void ExternalDevice::sendCommand(const string& command) {
     if (isConnected) {
-        cout << "ExternalDevice " << externalId << " executing command: " << command << endl;
+        rawState = command;
+        cout << "[ExternalDevice:" << vendorName << "] Executing command: " << command << "\n";
     } else {
-        cout << "ExternalDevice " << externalId << " is not connected. Cannot send command." << endl;
+        cout << "[ExternalDevice:" << vendorName << "] Not connected. Cannot send command.\n";
     }
 }
-string ExternalDevice::getStatus() {
-    return isConnected ? "Connected" : "Disconnected";
+
+string ExternalDevice::getStatus() const {
+    return isConnected ? "Connected (state=" + rawState + ")" : "Disconnected";
 }
 

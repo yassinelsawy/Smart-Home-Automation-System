@@ -1,9 +1,10 @@
+#pragma once
 #include "IDeviceState.h"
 
 class OffState : public IDeviceState {
 public:
-    void turnOn() override;
-    void turnOff() override;
+    void turnOn(SmartDevice* device) override;
+    void turnOff(SmartDevice* device) override;
     void dim(SmartDevice* device, int level) override;
-    string getStatus() override;
+    string getStateName() const override;
 };

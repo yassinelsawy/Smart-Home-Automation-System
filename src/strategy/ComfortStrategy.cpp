@@ -1,32 +1,15 @@
-#include "../../include/strategy/ComfortStrategy.h"
+#include "../../include/strategy/ComfortMode.h"
 #include "../../include/core/SmartHomeHub.h"
-#include "../../include/utils/Logger.h"
 #include <iostream>
+using namespace std;
 
-namespace SmartHome {
-namespace Strategy {
-
-const char* ComfortStrategy::WARM_WHITE_HEX = "#FFD700";
-
-void ComfortStrategy::execute(Core::SmartHomeHub& hub) {
-    std::cout << "\n[Strategy] Applying Comfort mode...\n";
-
-    hub.turnOn();
-
-    Utils::Logger::instance().info(
-        "Comfort mode: lights at " + std::to_string(COMFORT_BRIGHTNESS) + "% ("
-        + std::string(WARM_WHITE_HEX) + "), thermostat at "
-        + std::to_string(COMFORT_TEMP) + " °C.",
-        "ComfortStrategy");
-
-    std::cout << "[Strategy] Comfort mode applied. "
-              << "Lights: " << COMFORT_BRIGHTNESS << "% warm-white, "
-              << "Temp: "   << COMFORT_TEMP        << " °C.\n";
+void ComfortMode::applyMode(SmartHomeHub* hub) {
+    cout << "[ComfortMode] Applying comfort settings (temp=" << tempLevel
+         << ", brightness=" << brightnessLevel << ").\n";
+    if (hub) {
+        for (auto* device : hub->getDevicesByZone().begin()->second)
+            device->turnOn();
+    }
 }
 
-std::string ComfortStrategy::getStrategyName() const {
-    return "Comfort";
-}
-
-} // namespace Strategy
-} // namespace SmartHome
+string ComfortMode::getModeName() { return "Comfort"; }

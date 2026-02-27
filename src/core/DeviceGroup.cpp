@@ -1,5 +1,5 @@
-#include "SmartComponent.h"
-#include "DeviceGroup.h"
+#include "../../include/core/SmartComponent.h"
+#include "../../include/core/DeviceGroup.h"
 #include <vector>
 #include <iostream>
 #include <string>
@@ -7,47 +7,42 @@
 
 using namespace std;
 
-DeviceGroup::DeviceGroup(string gID, string gName) {
-    GroupID = gID;
-    GroupName = gName;
-}
+DeviceGroup::DeviceGroup() {}
 
-void DeviceGroup::Add(SmartComponent* component) {
+DeviceGroup::DeviceGroup(string gID, string gName, string gType)
+    : groupId(gID), groupName(gName), groupType(gType) {}
+
+void DeviceGroup::add(SmartComponent* component) {
     children.push_back(component);
 }
 
-void DeviceGroup::Remove(SmartComponent* component) {
-    children.erase(remove(children.begin(), children.end(), component), children.end());
+void DeviceGroup::remove(SmartComponent* component) {
+    children.erase(std::remove(children.begin(), children.end(), component), children.end());
 }
 
-vector<SmartComponent*> DeviceGroup::getChildren() {
+vector<SmartComponent*> DeviceGroup::getChildren() const {
     return children;
 }
 
 void DeviceGroup::turnOn() {
-    for (auto* child : children) {
+    for (auto* child : children)
         child->turnOn();
-    }
 }
 
 void DeviceGroup::turnOff() {
-    for (auto* child : children) {
+    for (auto* child : children)
         child->turnOff();
-    }
 }
 
-string DeviceGroup::getName() {
-    return GroupName;
-}
-string DeviceGroup::getId() {
-    return GroupID;
-}
+string DeviceGroup::getName() const { return groupName; }
+string DeviceGroup::getId()   const { return groupId; }
+string DeviceGroup::getGroupType() const { return groupType; }
 
-string DeviceGroup::getStatus() {
-    string status = "Group: " + GroupName + " (ID: " + GroupID + ")\n";
-    for (auto* child : children) {
+string DeviceGroup::getStatus() const {
+    string status = "Group: " + groupName + " (ID: " + groupId + ")\n";
+    for (auto* child : children)
         status += "  - " + child->getStatus() + "\n";
-    }
     return status;
 }
+
 

@@ -1,251 +1,268 @@
-/**
+﻿/**
  * @file main.cpp
- * @brief Smart Home Automation System – demonstration entry point.
+ * @brief Smart Home Automation System - design patterns demonstration.
  *
- * Demonstrates:
- *  1. Abstract Factory  – device creation via BasicDeviceFactory
- *  2. Composite         – FloorGroup → RoomGroup → Device hierarchy
- *  3. Command           – TurnOn/Off, SetTemperature, macro batch, undo
- *  4. Observer          – AlertSystem subscribed to motion sensors & cameras
- *  5. State             – Light transitions (Inactive → Active)
- *  6. Strategy          – Security & Comfort automation modes
- *  7. Adapter           – LegacyDevice integrated via LegacyDeviceAdapter
+ *  1. Abstract Factory  - BasicDeviceFactory / PremiumDeviceFactory
+ *  2. Composite         - FloorGroup / RoomGroup / FunctionalGroup hierarchy
+ *  3. Command           - TurnOn/Off, SetTemperature, undo
+ *  4. State             - OnState / OffState / DimmedState transitions
+ *  5. Observer          - AutomationEngine reacts to device changes
+ *  6. Strategy          - ComfortMode / EnergyEfficiencyMode
+ *  7. Adapter           - ExternalDevice via ExternalDeviceAdapter
  */
 
 #include "include/core/SmartHomeHub.h"
+#include "include/core/SmartDevice.h"
 #include "include/core/FloorGroup.h"
 #include "include/core/RoomGroup.h"
+#include "include/core/FunctionalGroup.h"
 
-#include "include/devices/Light.h"
-#include "include/devices/Thermostat.h"
-#include "include/devices/Camera.h"
-#include "include/devices/MotionSensor.h"
+#include "include/devices/BrandALedLight.h"
+#include "include/devices/BrandBLedLight.h"
+#include "include/devices/BrandASmartThermoA.h"
+#include "include/devices/BrandAWiredSCam.h"
+#include "include/devices/BrandBWirelessSCam.h"
 #include "include/devices/DoorLock.h"
+#include "include/devices/MotionSensor.h"
 
-#include "include/command/CommandInvoker.h"
+#include "include/factory/BrandBFactory.h"
+#include "include/factory/BrandAFactory.h"
+
+#include "include/command/AutomationEngine.h"
 #include "include/command/TurnOnCommand.h"
 #include "include/command/TurnOffCommand.h"
 #include "include/command/SetTemperatureCommand.h"
+#include "include/command/AutomationEngine.h"
 
-#include "include/observer/AlertSystem.h"
-#include "include/observer/EventManager.h"
+#include "include/state/OnState.h"
+#include "include/state/OffState.h"
+#include "include/state/DimmedState.h"
 
-#include "include/state/ActiveState.h"
-#include "include/state/StandbyState.h"
-#include "include/state/InactiveState.h"
+#include "include/strategy/ComfortMode.h"
+#include "include/strategy/EnergyEfficiencyMode.h"
 
-#include "include/strategy/SecurityStrategy.h"
-#include "include/strategy/ComfortStrategy.h"
-#include "include/strategy/EnergyEfficiencyStrategy.h"
+#include "include/adapter/ExternalDevice.h"
+#include "include/adapter/ExternalDeviceAdapter.h"
 
-#include "include/factory/BasicDeviceFactory.h"
-#include "include/factory/PremiumDeviceFactory.h"
-
-#include "include/adapter/LegacyDevice.h"
-#include "include/adapter/LegacyDeviceAdapter.h"
-
-#include "include/utils/Logger.h"
-#include "include/utils/Timer.h"
+#include "include/observer/Observer.h"
 
 #include <iostream>
-#include <memory>
+#include <string>
+using namespace std;
 
-// ─────────────────────────────────────────────────────────────────────────────
-
-void printSectionHeader(const std::string& title) {
-    std::cout << "\n";
-    std::cout << "╔══════════════════════════════════════════╗\n";
-    std::cout << "║  " << title;
-    std::cout << std::string(41 - title.size(), ' ') << "║\n";
-    std::cout << "╚══════════════════════════════════════════╝\n";
+// ---------------------------------------------------------------------------
+void section(const string& title) {
+    cout << "\n========================================\n";
+    cout << "  " << title << "\n";
+    cout << "========================================\n";
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// // Minimal concrete observer for the demo
+// class ConsoleObserver : public Observer {
+//     string label;
+// public:
+//     explicit ConsoleObserver(string lbl) : label(move(lbl)) {}
+//     void update(SmartDevice* device) override {
+//         cout << "[Observer:" << label << "] '"
+//              << device->getName() << "' -> " << device->getStatus() << "\n";
+//     }
+// };
 
+// ---------------------------------------------------------------------------
 int main() {
-    // ── Configure logger ────────────────────────────────────────────────────
-    using namespace SmartHome;
-    Utils::Logger::instance().setMinLevel(Utils::LogLevel::INFO);
-    // Optional: Utils::Logger::instance().setLogFile("smarthome.log");
 
-    Utils::Timer totalTimer;
-    totalTimer.start();
+    // =========================================================================
+    // 1. ABSTRACT FACTORY
+    // =========================================================================
+    section("1. Abstract Factory Pattern");
 
-    // ████████████████████████████████████████████████████████████████████████
-    // 1. ABSTRACT FACTORY – Create devices for each room
-    // ████████████████████████████████████████████████████████████████████████
-    printSectionHeader("1. Abstract Factory Pattern");
+    BrandAFactory BrandAFactory;
+    BrandBFactory   BrandBFactory;
 
-    Factory::BasicDeviceFactory   basicFactory;
-    Factory::PremiumDeviceFactory premiumFactory;
+    Light* BrandALight = BrandAFactory.createLight("LED");
+    Light* BrandBLight = BrandBFactory.createLight("LED");
+    Camera* BrandACam = BrandAFactory.createCamera("Wired");
+    Camera* BrandBCam = BrandBFactory.createCamera("Wireless");
+    Thermostat* BrandATherm = BrandAFactory.createThermostat("A");
+    Thermostat* BrandBTherm = BrandBFactory.createThermostat("A");
+    MotionSensor* sensor = BrandBFactory.createMotionSensor();
+    DoorLock* dlock = BrandBFactory.createDoorLock();
 
-    std::cout << "Using factory: " << basicFactory.getFactoryName()   << "\n";
-    std::cout << "Using factory: " << premiumFactory.getFactoryName() << "\n";
+    BrandALight->turnOn();
+    BrandALight->adjustBrightness(80);
+    cout << "Premium light type : " << BrandALight->getType() << "\n";
 
-    // Ground-floor living room devices (basic tier)
-    auto livingLight  = basicFactory.createLight      ("Living Room Light", "L001", "Living Room");
-    auto livingTherm  = basicFactory.createThermostat ("Living Room Therm", "T001", "Living Room");
-    auto frontCamera  = basicFactory.createCamera     ("Front Door Cam",    "C001", "Front Door");
-    auto hallSensor   = basicFactory.createMotionSensor("Hall Motion Sensor","S001", "Hallway");
-    auto frontLock    = basicFactory.createDoorLock   ("Front Door Lock",   "DL001","Front Door");
+    BrandBLight->turnOn();
+    cout << "Basic light type : " << BrandBLight->getType() << "\n";
 
-    // Bedroom devices (premium tier)
-    auto bedLight     = premiumFactory.createLight    ("Bedroom Light",     "L002", "Bedroom");
-    auto bedTherm     = premiumFactory.createThermostat("Bedroom Therm",     "T002", "Bedroom");
+    BrandATherm->setTargetTemperature(22.5);
+    BrandATherm->setMode(ThermoMode::HEATING);
+    cout << "Premium thermostat target : " << BrandATherm->getTargetTemperature() << " C\n";
 
-    // ████████████████████████████████████████████████████████████████████████
-    // 2. COMPOSITE – Build the device tree
-    // ████████████████████████████████████████████████████████████████████████
-    printSectionHeader("2. Composite Pattern");
+    BrandBTherm->setTargetTemperature(20.0);
 
-    auto hub = std::make_shared<Core::SmartHomeHub>("My Smart Home");
+    BrandACam->startRecording();
+    BrandACam->enableNightVision();
+    BrandBCam->startRecording();
+    cout << "Premium cam recording: " << (BrandACam->isRecording() ? "YES" : "NO") << "\n";
 
-    // Ground Floor
-    auto ground = std::make_shared<Core::FloorGroup>("Ground Floor", 0);
+    dlock->setPin("1234");
+    dlock->lock();
+    cout << "Door locked: " << (dlock->isLocked() ? "YES" : "NO") << "\n";
 
-    auto livingRoom = std::make_shared<Core::RoomGroup>("Living Room", "Lounge", 0);
-    livingRoom->add(livingLight);
-    livingRoom->add(livingTherm);
+    sensor->setSensitivity(7);
+    bool motionFound = sensor->detectMotion();
+    cout << "Motion detected: " << (motionFound ? "YES" : "NO") << "\n";
 
-    auto hallway = std::make_shared<Core::RoomGroup>("Hallway", "Corridor", 0);
-    hallway->add(hallSensor);
-    hallway->add(frontCamera);
-    hallway->add(frontLock);
+    // =========================================================================
+    // 2. COMPOSITE PATTERN
+    // =========================================================================
+    section("2. Composite Pattern");
 
-    ground->add(livingRoom);
-    ground->add(hallway);
+    SmartDevice livingLight("L001", "Living Room Light", "BrandA");
+    SmartDevice bedroomLight("L002", "Bedroom Light", "BrandB");
+    SmartDevice hallSensor  ("S001", "Hall Sensor", "BrandA");
+    SmartDevice frontLock   ("DL01", "Front Door Lock", "BrandA");
+    SmartDevice bedThermo   ("T001", "Bedroom Thermostat","BrandB");
 
-    // First Floor
-    auto first = std::make_shared<Core::FloorGroup>("First Floor", 1);
-    auto bedroom = std::make_shared<Core::RoomGroup>("Bedroom", "Bedroom", 1);
-    bedroom->add(bedLight);
-    bedroom->add(bedTherm);
-    first->add(bedroom);
+    SmartHomeHub hub("My Smart Home");
 
-    hub->add(ground);
-    hub->add(first);
+    FloorGroup groundFloor ("F001", "Ground Floor",  0);
+    RoomGroup livingRoom ("R001", "Living Room", "Lounge");
+    RoomGroup hallway ("R002", "Hallway", "Corridor");
+    FloorGroup firstFloor ("F002", "First Floor", 1);
+    RoomGroup bedroom ("R003", "Bedroom", "Master");
+    FunctionalGroup secZone ("FG01", "Security Zone", "Security");
 
-    std::cout << "\nDevice hierarchy:\n";
-    hub->getStatus();
+    livingRoom.add(&livingLight);
+    hallway.add(&hallSensor);
+    hallway.add(&frontLock);
+    bedroom.add(&bedroomLight);
+    bedroom.add(&bedThermo);
+    secZone.add(&hallSensor);
+    secZone.add(&frontLock);
 
-    // ████████████████████████████████████████████████████████████████████████
-    // 3. OBSERVER – Attach alert system to subjects
-    // ████████████████████████████████████████████████████████████████████████
-    printSectionHeader("3. Observer Pattern");
+    groundFloor.add(&livingRoom);
+    groundFloor.add(&hallway);
+    firstFloor.add(&bedroom);
 
-    auto alertSystem = std::make_shared<Observer::AlertSystem>("Main Security Panel");
+    hub.addDevice(&groundFloor, "Ground");
+    hub.addDevice(&firstFloor, "First");
+    hub.addDevice(&secZone, "Security");
 
-    hallSensor->attach(alertSystem);
-    frontCamera->attach(alertSystem);
-    frontLock->attach(alertSystem);
+    cout << "Security zone type: " << secZone.getFunctionType() << "\n";
 
-    Observer::EventManager eventBus;
-    eventBus.subscribe("motion",    alertSystem);
-    eventBus.subscribe("door_lock", alertSystem);
+    cout << "\n--- Turning on Ground Floor (propagates to all children) ---\n";
+    groundFloor.turnOn();
 
-    std::cout << "Alert system attached to hallway sensor, front camera, front lock.\n";
+    cout << "\n--- Hub status by zone ---\n";
+    hub.getStatus();
 
-    // ████████████████████████████████████████████████████████████████████████
-    // 4. COMMAND – Turn on living room, set temperature, undo
-    // ████████████████████████████████████████████████████████████████████████
-    printSectionHeader("4. Command Pattern");
+    // =========================================================================
+    // 3. COMMAND PATTERN
+    // =========================================================================
+    section("3. Command Pattern");
 
-    Command::CommandInvoker invoker;
+    AutomationEngine invoker;
 
-    // Turn on living room light
-    invoker.executeCommand(
-        std::make_unique<Command::TurnOnCommand>(livingLight));
+    TurnOnCommand cmdOn (&livingLight);
+    TurnOffCommand cmdOff (&bedroomLight);
+    SetTemperatureCommand cmdTemp(BrandATherm, 25.0);
 
-    // Set temperature
-    invoker.executeCommand(
-        std::make_unique<Command::SetTemperatureCommand>(livingTherm, 24.0));
+    invoker.execute(&cmdOn);
+    cout << "Living light status: " << livingLight.getStatus() << "\n";
 
-    std::cout << "\nLiving room light is: "
-              << (livingLight->isEnabled() ? "ON" : "OFF") << "\n";
-    std::cout << "Thermostat target: "
-              << livingTherm->getTargetTemperature() << " °C\n";
+    invoker.execute(&cmdTemp);
+    cout << "Thermostat after set: " << BrandATherm->getTargetTemperature() << " C\n";
 
-    // Undo last command (temperature revert)
-    invoker.undoLastCommand();
-    std::cout << "After undo – Thermostat target: "
-              << livingTherm->getTargetTemperature() << " °C\n";
+    invoker.undoLast();
+    cout << "Thermostat after undo: " << BrandATherm->getTargetTemperature() << " C\n";
 
-    // Macro batch – turn on entire first floor
-    invoker.addToQueue(std::make_unique<Command::TurnOnCommand>(bedLight));
-    invoker.addToQueue(std::make_unique<Command::TurnOnCommand>(bedTherm));
-    invoker.executeQueue();
+    invoker.execute(&cmdOff);
+    cout << "Bedroom light status: " << bedroomLight.getStatus() << "\n";
 
-    // ████████████████████████████████████████████████████████████████████████
-    // 5. STATE – Light state transitions
-    // ████████████████████████████████████████████████████████████████████████
-    printSectionHeader("5. State Pattern");
+    // =========================================================================
+    // 4. STATE PATTERN
+    // =========================================================================
+    section("4. State Pattern");
 
-    std::cout << "Bedroom light state: "
-              << livingLight->getCurrentState()->getStateName() << "\n";
+    OnState onState;
+    DimmedState dimState(60);
+    OffState offState;
 
-    livingLight->turnOn();
-    std::cout << "After turnOn() – state: "
-              << livingLight->getCurrentState()->getStateName() << "\n";
+    cout << "OnState name: " << onState.getStateName()  << "\n";
+    cout << "DimmedState name: " << dimState.getStateName() << "\n";
+    cout << "OffState name: " << offState.getStateName() << "\n";
 
-    livingLight->changeState(std::make_unique<State::StandbyState>());
-    std::cout << "After changeState(Standby) – state: "
-              << livingLight->getCurrentState()->getStateName() << "\n";
+    SmartDevice lamp("DEV1", "Smart Lamp", "BrandA");
+    cout << "\nLamp initial: " << lamp.getStatus() << "\n";
+    lamp.turnOn();
+    cout << "After turnOn: " << lamp.getStatus() << "\n";
+    lamp.dim(40);
+    cout << "After dim(40): " << lamp.getStatus() << "\n";
+    lamp.turnOff();
+    cout << "After turnOff: " << lamp.getStatus() << "\n";
 
-    livingLight->changeState(std::make_unique<State::InactiveState>());
-    std::cout << "After changeState(Inactive) – state: "
-              << livingLight->getCurrentState()->getStateName() << "\n";
+    // =========================================================================
+    // 5. OBSERVER PATTERN
+    // =========================================================================
+    section("5. Observer Pattern");
 
-    // ████████████████████████████████████████████████████████████████████████
-    // 6. STRATEGY – Automation modes
-    // ████████████████████████████████████████████████████████████████████████
-    printSectionHeader("6. Strategy Pattern");
+    AutomationEngine engine;
 
-    hub->setAutomationStrategy(
-        std::make_unique<Strategy::SecurityStrategy>());
-    hub->executeAutomation();
+    livingLight.attach(&engine);
+    hallSensor.attach(&engine);
+    bedroomLight.attach(&engine);
 
-    hub->setAutomationStrategy(
-        std::make_unique<Strategy::ComfortStrategy>());
-    hub->executeAutomation();
+    cout << "--- Triggering device changes ---\n";
+    livingLight.turnOn();
+    livingLight.turnOff();
+    hallSensor.turnOn();
+    bedroomLight.turnOn();
 
-    hub->setAutomationStrategy(
-        std::make_unique<Strategy::EnergyEfficiencyStrategy>());
-    hub->executeAutomation();
+    // =========================================================================
+    // 6. STRATEGY PATTERN
+    // =========================================================================
+    section("6. Strategy Pattern");
 
-    // ████████████████████████████████████████████████████████████████████████
-    // 7. OBSERVER – Trigger events after sensors are active
-    // ████████████████████████████████████████████████████████████████████████
-    printSectionHeader("3b. Observer – Trigger Events");
+    ComfortMode comfortMode;
+    EnergyEfficiencyMode ecoMode;
 
-    hub->turnOn(); // ensure all devices are online
-    hallSensor->triggerMotion();
-    frontCamera->detectMotion();
-    frontLock->unlock("9999"); // wrong pin → alarm
+    cout << "Applying: " << comfortMode.getModeName() << "\n";
+    hub.setMode(&comfortMode);
 
-    alertSystem->printAlertHistory();
+    cout << "Applying: " << ecoMode.getModeName() << "\n";
+    hub.setMode(&ecoMode);
 
-    // ████████████████████████████████████████████████████████████████████████
-    // 8. ADAPTER – Integrate a legacy device
-    // ████████████████████████████████████████████████████████████████████████
-    printSectionHeader("7. Adapter Pattern");
+    // =========================================================================
+    // 7. ADAPTER PATTERN
+    // =========================================================================
+    section("7. Adapter Pattern");
 
-    auto legacyHVAC = std::make_shared<Adapter::LegacyDevice>("OldHVAC-5000");
-    Adapter::LegacyDeviceAdapter adapter(legacyHVAC);
+    ExternalDevice legacyHVAC("EXT-001", "VendorXYZ HVAC", "RS-485");
+    ExternalDeviceAdapter adapter(&legacyHVAC, "v2.1", true);
 
-    adapter.powerOn();
-    adapter.setParameter("channel_0", "22");   // set temperature channel
-    adapter.setParameter("channel_1", "60");   // fan speed channel
+    adapter.turnOn();
+    adapter.control("dim");
+    cout << "Adapter status: " << adapter.getStatus() << "\n";
+    cout << "Adapter name: " << adapter.getName()   << "\n";
+    adapter.turnOff();
 
-    std::cout << "Protocol : " << adapter.getProtocolVersion() << "\n";
-    std::cout << "Status   : " << adapter.queryStatus()        << "\n";
+    hub.addDevice(&adapter, "External");
+    hub.controlDevice("EXT-001", "on");
 
-    adapter.powerOff();
+    // =========================================================================
+    section("Demo Complete");
+    cout << "All 7 patterns demonstrated successfully.\n\n";
 
-    // ── Summary ─────────────────────────────────────────────────────────────
-    totalTimer.stop();
-    printSectionHeader("Demo Complete");
-    std::cout << "Total demo time: " << totalTimer.formatElapsed() << "\n";
-    std::cout << "Smart Home System shut down gracefully.\n\n";
+    delete BrandALight;
+    delete BrandBLight;
+    delete BrandACam;
+    delete BrandBCam;
+    delete BrandATherm;
+    delete BrandBTherm;
+    delete sensor;
+    delete dlock;
 
     return 0;
 }

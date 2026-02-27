@@ -1,17 +1,23 @@
 #pragma once
 
-#include "../core/SmartDevice.h"
-#include "../state/IDeviceState.h"
-#include <memory>
 #include <string>
+using namespace std;
 
+enum class ThermoMode { COOLING, HEATING, AUTO };
 
 class Thermostat {
+    double m_targetTemp;
+    double m_currentTemp;
+    ThermoMode m_mode;
 public:
-    Thermostat(){}
-    Thermostat(string type){}
+    Thermostat();
+    // Thermostat(string type) {}
     virtual ~Thermostat() = default;
-    void setTemperature(double temp) const;
-    double getTemperature() const;
 
+    virtual void setTargetTemperature(double temp);
+    virtual double getTargetTemperature() const;
+    virtual double getCurrentTemperature() const;
+    virtual void setCurrentTemperature(double temp);
+    virtual void setMode(ThermoMode mode);
+    virtual ThermoMode getMode() const;
 };
