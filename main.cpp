@@ -57,18 +57,8 @@ void section(const string& title) {
     cout << "========================================\n";
 }
 
-// // Minimal concrete observer for the demo
-// class ConsoleObserver : public Observer {
-//     string label;
-// public:
-//     explicit ConsoleObserver(string lbl) : label(move(lbl)) {}
-//     void update(SmartDevice* device) override {
-//         cout << "[Observer:" << label << "] '"
-//              << device->getName() << "' -> " << device->getStatus() << "\n";
-//     }
-// };
 
-// ---------------------------------------------------------------------------
+
 int main() {
 
     // =========================================================================
@@ -90,21 +80,21 @@ int main() {
 
     BrandALight->turnOn();
     BrandALight->adjustBrightness(80);
-    cout << "Premium light type : " << BrandALight->getType() << "\n";
+    cout << "BrandA light type: " << BrandALight->getType() << "\n";
 
     BrandBLight->turnOn();
-    cout << "Basic light type : " << BrandBLight->getType() << "\n";
+    cout << "BrandB light type: " << BrandBLight->getType() << "\n";
 
     BrandATherm->setTargetTemperature(22.5);
     BrandATherm->setMode(ThermoMode::HEATING);
-    cout << "Premium thermostat target : " << BrandATherm->getTargetTemperature() << " C\n";
+    cout << "BrandA thermostat target: " << BrandATherm->getTargetTemperature() << " C\n";
 
     BrandBTherm->setTargetTemperature(20.0);
 
     BrandACam->startRecording();
     BrandACam->enableNightVision();
     BrandBCam->startRecording();
-    cout << "Premium cam recording: " << (BrandACam->isRecording() ? "YES" : "NO") << "\n";
+    cout << "BrandA cam recording: " << (BrandACam->isRecording() ? "YES" : "NO") << "\n";
 
     dlock->setPin("1234");
     dlock->lock();
@@ -119,43 +109,68 @@ int main() {
     // =========================================================================
     section("2. Composite Pattern");
 
+    // ── Leaf nodes (SmartDevice) ──────────────────────────────────────────────
     SmartDevice livingLight("L001", "Living Room Light", "BrandA");
+    SmartDevice hallSensor ("S001", "Hall Sensor", "BrandA");
+    SmartDevice frontLock  ("DL01", "Front Door Lock", "BrandA");
     SmartDevice bedroomLight("L002", "Bedroom Light", "BrandB");
-    SmartDevice hallSensor  ("S001", "Hall Sensor", "BrandA");
-    SmartDevice frontLock   ("DL01", "Front Door Lock", "BrandA");
-    SmartDevice bedThermo   ("T001", "Bedroom Thermostat","BrandB");
+    SmartDevice bedThermo  ("T001", "Bedroom Thermostat","BrandB");
 
-    SmartHomeHub hub("My Smart Home");
 
-    FloorGroup groundFloor ("F001", "Ground Floor",  0);
+    FloorGroup groundFloor("F001", "Ground Floor", 0);
     RoomGroup livingRoom ("R001", "Living Room", "Lounge");
     RoomGroup hallway ("R002", "Hallway", "Corridor");
     FloorGroup firstFloor ("F002", "First Floor", 1);
     RoomGroup bedroom ("R003", "Bedroom", "Master");
-    FunctionalGroup secZone ("FG01", "Security Zone", "Security");
+    FunctionalGroup secZone ("FG01", "Security Zone","Security");
 
+    // Wire leaves into rooms
     livingRoom.add(&livingLight);
     hallway.add(&hallSensor);
     hallway.add(&frontLock);
     bedroom.add(&bedroomLight);
     bedroom.add(&bedThermo);
-    secZone.add(&hallSensor);
-    secZone.add(&frontLock);
 
     groundFloor.add(&livingRoom);
     groundFloor.add(&hallway);
     firstFloor.add(&bedroom);
 
+    secZone.add(&hallSensor);
+    secZone.add(&frontLock);
+
+    SmartHomeHub hub("My Smart Home");
     hub.addDevice(&groundFloor, "Ground");
-    hub.addDevice(&firstFloor, "First");
-    hub.addDevice(&secZone, "Security");
+    hub.addDevice(&firstFloor,  "First");
+    hub.addDevice(&secZone,     "Security");
 
-    cout << "Security zone type: " << secZone.getFunctionType() << "\n";
+    cout << "Ground floor number : " << groundFloor.getFloorNumber() << "\n";
+    cout << "First floor number: " << firstFloor.getFloorNumber()  << "\n";
+    cout << "Living room type: " << livingRoom.getRoomType()<< "\n";
+    cout << "Hallway type: " << hallway.getRoomType()<< "\n";
+    cout << "Security zone func: " << secZone.getFunctionType()     << "\n";
 
-    cout << "\n--- Turning on Ground Floor (propagates to all children) ---\n";
+    cout << "\n--- [Leaf] Turn on Living Room Light individually ---\n";
+    livingLight.turnOn();
+    cout << "  " << livingLight.getName() << " -> " << livingLight.getStatus() << "\n";
+
+    cout << "\n--- [Composite] Turn on entire Ground Floor (propagates down) ---\n";
     groundFloor.turnOn();
+    cout << "  " << livingLight.getName()<< " -> " << livingLight.getStatus()<< "\n";
+    cout << "  " << hallSensor.getName()<< " -> " << hallSensor.getStatus()<< "\n";
+    cout << "  " << frontLock.getName()<< " -> " << frontLock.getStatus()<< "\n";
 
-    cout << "\n--- Hub status by zone ---\n";
+    cout << "\n--- [Composite] Turn off just the Hallway ---\n";
+    hallway.turnOff();
+    cout << "  " << livingLight.getName()<< " -> " << livingLight.getStatus()<< "\n";
+    cout << "  " << hallSensor.getName()<< " -> " << hallSensor.getStatus()<< "\n";
+    cout << "  " << frontLock.getName()<< " -> " << frontLock.getStatus()<< "\n";
+
+    cout << "\n--- [Cross-cut] Turn on Security Zone ---\n";
+    secZone.turnOn();
+    cout << "  " << hallSensor.getName()<< " -> " << hallSensor.getStatus()<< "\n";
+    cout << "  " << frontLock.getName()<< " -> " << frontLock.getStatus()<< "\n";
+
+    cout << "\n--- [Hub] Full hub status by zone ---\n";
     hub.getStatus();
 
     // =========================================================================
