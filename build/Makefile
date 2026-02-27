@@ -210,6 +210,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\SmartHome.dir\build.make CMakeFiles/SmartHome.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+src/Client.obj: src/Client.cpp.obj
+.PHONY : src/Client.obj
+
+# target to build an object file
+src/Client.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\SmartHome.dir\build.make CMakeFiles/SmartHome.dir/src/Client.cpp.obj
+.PHONY : src/Client.cpp.obj
+
+src/Client.i: src/Client.cpp.i
+.PHONY : src/Client.i
+
+# target to preprocess a source file
+src/Client.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\SmartHome.dir\build.make CMakeFiles/SmartHome.dir/src/Client.cpp.i
+.PHONY : src/Client.cpp.i
+
+src/Client.s: src/Client.cpp.s
+.PHONY : src/Client.s
+
+# target to generate assembly for a file
+src/Client.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\SmartHome.dir\build.make CMakeFiles/SmartHome.dir/src/Client.cpp.s
+.PHONY : src/Client.cpp.s
+
 src/adapter/ExternalDevice.obj: src/adapter/ExternalDevice.cpp.obj
 .PHONY : src/adapter/ExternalDevice.obj
 
@@ -1163,6 +1187,9 @@ help:
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... src/Client.obj
+	@echo ... src/Client.i
+	@echo ... src/Client.s
 	@echo ... src/adapter/ExternalDevice.obj
 	@echo ... src/adapter/ExternalDevice.i
 	@echo ... src/adapter/ExternalDevice.s

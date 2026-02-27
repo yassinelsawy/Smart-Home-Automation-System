@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/main.cpp" "CMakeFiles/SmartHome.dir/main.cpp.obj" "gcc" "CMakeFiles/SmartHome.dir/main.cpp.obj.d"
+  "C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/src/Client.cpp" "CMakeFiles/SmartHome.dir/src/Client.cpp.obj" "gcc" "CMakeFiles/SmartHome.dir/src/Client.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

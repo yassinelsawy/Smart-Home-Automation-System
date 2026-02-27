@@ -48,7 +48,7 @@ void SmartHomeHub::getStatus() const {
     for (const auto& pair : devicesByZone) {
         cout << "Zone: " << pair.first << "\n";
         for (const auto* device : pair.second)
-            cout << "  - " << device->getStatus() << "\n";
+            cout << "  - " << device->getName() << " -> " << device->getStatus() << "\n";
     }
 }
 

@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/SmartHome.dir/main.cpp.obj"
   "CMakeFiles/SmartHome.dir/main.cpp.obj.d"
+  "CMakeFiles/SmartHome.dir/src/Client.cpp.obj"
+  "CMakeFiles/SmartHome.dir/src/Client.cpp.obj.d"
   "bin/SmartHome.exe"
   "bin/SmartHome.exe.manifest"
   "bin/SmartHome.pdb"

@@ -106,7 +106,7 @@ endif()
 # Main executable
 # ═════════════════════════════════════════════════════════════════════════════
 
-add_executable(SmartHome main.cpp)
+add_executable(SmartHome main.cpp src/Client.cpp)
 target_link_libraries(SmartHome PRIVATE smarthome_core)
 
 # ═════════════════════════════════════════════════════════════════════════════

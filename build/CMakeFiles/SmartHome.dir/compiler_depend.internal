@@ -3,18 +3,47 @@
 
 CMakeFiles/SmartHome.dir/main.cpp.obj
  C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/main.cpp
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/Client.h
+
+CMakeFiles/SmartHome.dir/src/Client.cpp.obj
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/src/Client.cpp
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/SmartDevice.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/observer/Observer.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/observer/Subject.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/state/IDeviceState.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/Client.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/adapter/ExternalDevice.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/adapter/ExternalDeviceAdapter.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/command/SetTemperatureCommand.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/command/TurnOffCommand.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/command/TurnOnCommand.h
  C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/command/AutomationEngine.h
  C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/command/ICommand.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/SmartDevice.h
  C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/Camera.h
  C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/DoorLock.h
  C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/Light.h
  C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/MotionSensor.h
  C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/Thermostat.h
  C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/factory/SmartDeviceFactory.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/observer/Observer.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/observer/Subject.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/state/IDeviceState.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/DeviceGroup.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/FloorGroup.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/FunctionalGroup.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/RoomGroup.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/SmartComponent.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/SmartHomeHub.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/BrandALedLight.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/BrandASmartThermoA.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/BrandAWiredSCam.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/BrandBLedLight.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/BrandBWirelessSCam.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/factory/BrandAFactory.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/factory/BrandBFactory.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/state/DimmedState.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/state/OffState.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/state/OnState.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/strategy/ComfortMode.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/strategy/EnergyEfficiencyMode.h
+ C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/strategy/IMode.h
  C:/msys64/ucrt64/include/_mingw.h
  C:/msys64/ucrt64/include/_mingw_mac.h
  C:/msys64/ucrt64/include/_mingw_off_t.h
@@ -189,28 +218,4 @@ CMakeFiles/SmartHome.dir/main.cpp.obj
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/mm_malloc.h
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stddef.h
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/adapter/ExternalDevice.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/adapter/ExternalDeviceAdapter.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/command/SetTemperatureCommand.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/command/TurnOffCommand.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/command/TurnOnCommand.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/DeviceGroup.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/FloorGroup.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/FunctionalGroup.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/RoomGroup.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/SmartComponent.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/core/SmartHomeHub.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/BrandALedLight.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/BrandASmartThermoA.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/BrandAWiredSCam.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/BrandBLedLight.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/devices/BrandBWirelessSCam.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/factory/BrandAFactory.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/factory/BrandBFactory.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/state/DimmedState.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/state/OffState.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/state/OnState.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/strategy/ComfortMode.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/strategy/EnergyEfficiencyMode.h
- C:/C++ Projects/Edges_SW/Project 1/Smart-Home-Automation-System/include/strategy/IMode.h
 

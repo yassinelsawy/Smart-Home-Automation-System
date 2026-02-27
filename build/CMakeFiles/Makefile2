@@ -82,7 +82,7 @@ clean: CMakeFiles/SmartHome.dir/clean
 CMakeFiles/smarthome_core.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\smarthome_core.dir\build.make CMakeFiles/smarthome_core.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\smarthome_core.dir\build.make CMakeFiles/smarthome_core.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="C:\C++ Projects\Edges_SW\Project 1\Smart-Home-Automation-System\build\CMakeFiles" --progress-num=3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42 "Built target smarthome_core"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="C:\C++ Projects\Edges_SW\Project 1\Smart-Home-Automation-System\build\CMakeFiles" --progress-num=4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43 "Built target smarthome_core"
 .PHONY : CMakeFiles/smarthome_core.dir/all
 
 # Build rule for subdir invocation for target.
@@ -108,12 +108,12 @@ CMakeFiles/smarthome_core.dir/clean:
 CMakeFiles/SmartHome.dir/all: CMakeFiles/smarthome_core.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\SmartHome.dir\build.make CMakeFiles/SmartHome.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\SmartHome.dir\build.make CMakeFiles/SmartHome.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="C:\C++ Projects\Edges_SW\Project 1\Smart-Home-Automation-System\build\CMakeFiles" --progress-num=1,2 "Built target SmartHome"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="C:\C++ Projects\Edges_SW\Project 1\Smart-Home-Automation-System\build\CMakeFiles" --progress-num=1,2,3 "Built target SmartHome"
 .PHONY : CMakeFiles/SmartHome.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/SmartHome.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "C:\C++ Projects\Edges_SW\Project 1\Smart-Home-Automation-System\build\CMakeFiles" 42
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\C++ Projects\Edges_SW\Project 1\Smart-Home-Automation-System\build\CMakeFiles" 43
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/SmartHome.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start "C:\C++ Projects\Edges_SW\Project 1\Smart-Home-Automation-System\build\CMakeFiles" 0
 .PHONY : CMakeFiles/SmartHome.dir/rule
