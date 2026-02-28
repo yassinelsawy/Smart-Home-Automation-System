@@ -44,12 +44,15 @@ void SmartHomeHub::controlDevice(const string& /*deviceId*/, const string& actio
 }
 
 void SmartHomeHub::getStatus() const {
-    cout << "Smart Home Hub Status:\n";
+    cout << "|       Smart Home Hub Status           |\n";
     for (const auto& pair : devicesByZone) {
         cout << "Zone: " << pair.first << "\n";
         for (const auto* device : pair.second)
-            cout << "  - " << device->getName() << " -> " << device->getStatus() << "\n";
+            cout << "[" << device->getName() << "] -> " << device->getStatus() << "\n";
+
+        cout << "----------------------------------------\n";
     }
+
 }
 
 void SmartHomeHub::setMode(IMode* mode) {

@@ -27,6 +27,7 @@ The Smart Home Automation System models a connected home where:
 - Individual device actions can be queued, executed, and **undone** via commands.
 - Devices transition through **states** (on / dimmed / off).
 - A legacy external device is integrated through an **adapter**.
+- All demo logic is encapsulated in a dedicated **`Client`** class (`setupSystem()` + `run()`), keeping `main()` minimal.
 
 ---
 
@@ -48,9 +49,10 @@ The Smart Home Automation System models a connected home where:
 
 ```
 Smart-Home-Automation-System/
-├── CMakeLists.txt          # Build configuration
-├── main.cpp                # Demo entry point (all 7 patterns)
+├── CMakeLists.txt          # Build configuration (C++17, MinGW Makefiles)
+├── main.cpp                # Minimal entry point – creates Client and calls run()
 ├── include/
+│   ├── Client.h            # Client class declaration (setupSystem + run)
 │   ├── adapter/            # Adapter pattern interfaces & adapter
 │   ├── command/            # Command pattern (commands + invoker)
 │   ├── core/               # Composite core (SmartDevice, groups, hub)
@@ -58,9 +60,9 @@ Smart-Home-Automation-System/
 │   ├── factory/            # Abstract Factory interfaces & concrete factories
 │   ├── observer/           # Observer / Subject interfaces
 │   ├── state/              # State pattern (On, Off, Dimmed)
-│   ├── strategy/           # Strategy pattern (Comfort, EnergyEfficiency)
-│   └── utils/              # Shared utilities
+│   └── strategy/           # Strategy pattern (Comfort, EnergyEfficiency)
 └── src/
+    ├── Client.cpp          # Full Client implementation – all 7 pattern demos
     ├── adapter/
     ├── command/
     ├── core/
@@ -78,10 +80,13 @@ Smart-Home-Automation-System/
 |------|----------------|
 | C++ compiler with C++17 support | GCC 7 / Clang 5 / MSVC 2017 |
 | CMake | 3.17 |
+| Make | MinGW (`mingw32-make`) on Windows, GNU `make` on Linux/macOS |
 
 ---
 
 ## Build Instructions
+
+### Linux / macOS
 
 ```bash
 # 1. Clone the repository
@@ -97,29 +102,54 @@ cmake --build build
 # The executable is placed in build/bin/SmartHome
 ```
 
-> **Windows (MSVC):** open the generated `.sln` in Visual Studio, or run  
-> `cmake --build build --config Release`.
+### Windows (MSYS2 / MinGW)
+
+```powershell
+# 1. Clone the repository
+git clone https://github.com/yassinelsawy/Smart-Home-Automation-System.git
+cd Smart-Home-Automation-System
+
+# 2. Configure with MinGW Makefiles generator
+cmake -S . -B build -G "MinGW Makefiles"
+
+# 3. Compile
+mingw32-make -C build
+
+# The executable is placed in build\bin\SmartHome.exe
+```
 
 ---
 
 ## Running the Demo
 
 ```bash
+# Linux / macOS
 ./build/bin/SmartHome
+
+# Windows
+.\build\bin\SmartHome.exe
 ```
 
 The program walks through each of the seven patterns in sequence and prints labelled output to the console, for example:
 
 ```
 ========================================
-  1. Abstract Factory Pattern
+1. Abstract Factory Pattern
 ========================================
-BrandALedLight turned ON
-Premium light type : LED
+[BrandALedLight] turned ON
+BrandA light type: LED
 ...
 
++---------------------------------------+
+|       Smart Home Hub Status           |
++---------------------------------------+
+| Zone: Ground
++---------------------------------------+
+|  [Ground Floor] -> Floor 0:
++---------------------------------------+
+
 ========================================
-  Demo Complete
+Demo Complete
 ========================================
 All 7 patterns demonstrated successfully.
 ```
@@ -137,7 +167,9 @@ All 7 patterns demonstrated successfully.
 - `FloorGroup` – groups rooms on the same floor.  
 - `RoomGroup` – groups devices within a single room.  
 - `FunctionalGroup` – cross-cutting zone (e.g., Security) that spans multiple rooms.  
-Operations such as `turnOn()` propagate recursively through the entire tree.
+
+Operations such as `turnOn()` propagate recursively through the entire tree. The demo shows four distinct cases:  
+`[Leaf]` individual device, `[Composite]` entire floor, `[Composite]` sub-group only, `[Cross-cut]` functional zone spanning floors.
 
 ### 3 · Command
 `ICommand` exposes `execute()` and `undo()`.  
@@ -150,15 +182,21 @@ Transitions:
 `OffState` → (turnOn) → `OnState` → (dim) → `DimmedState` → (turnOff) → `OffState`.
 
 ### 5 · Observer
-`Subject` maintains a list of `Observer` instances and calls `update()` on each when a device changes.  
-`AutomationEngine` implements `Observer` and reacts to device events (e.g., triggers rules when a sensor turns on).
+`Subject` maintains a list of `Observer` instances and calls `update()` on each when a device changes state.  
+`AutomationEngine` implements `Observer` and reacts to device events (e.g., logs a message when a sensor turns on).
 
 ### 6 · Strategy
-`SmartHomeHub` holds an `IMode*` and delegates its `apply()` call at runtime.  
+`SmartHomeHub` holds an `IMode*` and delegates mode application at runtime.  
 - `ComfortMode` – prioritises user comfort settings.  
 - `EnergyEfficiencyMode` – applies energy-saving adjustments.  
 Swapping modes requires no changes to the hub itself.
 
 ### 7 · Adapter
-`ExternalDevice` represents a legacy third-party device with its own interface.  
+`ExternalDevice` represents a legacy third-party device with its own proprietary interface.  
 `ExternalDeviceAdapter` wraps it and implements the `SmartComponent` interface, making it a first-class citizen in the hub without modifying the original class.
+
+### Client Class
+`Client` encapsulates the entire demo workflow:  
+- `setupSystem()` – initialises the `SmartHomeHub`.  
+- `run()` – executes all seven pattern demonstrations in sequence.  
+`main()` simply instantiates `Client` and calls these two methods.
